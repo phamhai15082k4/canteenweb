@@ -1,0 +1,12 @@
+package com.canteensystem;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class CanteensystemApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(CanteensystemApplication.class, args);
+    }
+}
