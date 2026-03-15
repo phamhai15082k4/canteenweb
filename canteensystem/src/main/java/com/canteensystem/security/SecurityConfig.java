@@ -32,7 +32,7 @@ public class SecurityConfig {
             )
             .formLogin(form -> form
                 
-                .loginPage("/?login=true") 
+                .loginPage("/login") 
                 .loginProcessingUrl("/perform_login")
                 .successHandler(loginSuccessHandler)
                 .failureUrl("/?error=true") 
