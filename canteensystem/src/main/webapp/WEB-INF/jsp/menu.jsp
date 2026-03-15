@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-
-<!DOCTYPE html>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %> <!DOCTYPE html>
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
@@ -11,8 +10,14 @@
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+        
+        <style>
+            /* ÉP NAVBAR NỔI LÊN TRÊN CÙNG */
+            .navbar { z-index: 9999 !important; }
+            .dropdown-menu { z-index: 10000 !important; position: absolute; }
+            .category-card, .product-card { position: relative; z-index: 1; }
+        </style>
     </head>
     <body>
 
@@ -43,7 +48,7 @@
                                 <a class="btn btn-outline-dark rounded-pill px-4 py-2 fw-bold dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
                                     <i class="bi bi-person-circle fs-5 me-2 text-warning"></i> ${pageContext.request.userPrincipal.name}
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg" style="border-radius: 12px; margin-top: 10px; z-index: 1060;">
+                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg" style="border-radius: 12px; margin-top: 10px;">
                                     <c:if test="${pageContext.request.isUserInRole('ADMIN')}">
                                         <li><a class="dropdown-item fw-bold text-warning" href="/admin/dashboard"><i class="bi bi-speedometer2 me-2"></i> Trang Quản Trị</a></li>
                                         <li><hr class="dropdown-divider"></li>
@@ -76,19 +81,9 @@
             </div>
         </div>
 
-        <div class="container py-5">
-            
-            <h3 class="mb-4 fw-bold text-uppercase" style="color: var(--secondary-color); font-family: 'Playfair Display', serif;">
-                <c:choose>
-                    <c:when test="${activeCategoryId == null}">KHÁM PHÁ TẤT CẢ MÓN ĂN</c:when>
-                    <c:otherwise>
-                        <c:forEach items="${categories}" var="c">
-                            <c:if test="${c.id == activeCategoryId}">${c.name}</c:if>
-                        </c:forEach>
-                    </c:otherwise>
-                </c:choose>
-            </h3>
+        
 
+        <div class="container pb-5">
             <div class="row g-4">
                 <c:forEach items="${products}" var="p">
                     <div class="col-6 col-md-4 col-lg-3">
@@ -100,7 +95,7 @@
 
                             <a href="/product/${p.id}">
                                 <c:choose>
-                                    <c:when test="${not empty p.image && p.image.startsWith('http')}">
+                                    <c:when test="${not empty p.image && fn:startsWith(p.image, 'http')}">
                                         <img src="${p.image}" class="card-img-top" alt="${p.name}">
                                     </c:when>
                                     <c:when test="${not empty p.image}">
@@ -170,37 +165,6 @@
             </div>
         </div>
 
-        <c:if test="${not empty sessionScope.cart}">
-            <c:set var="cartTotalQuantity" value="0" />
-            <c:set var="cartTotalPrice" value="0" />
-            <c:forEach items="${sessionScope.cart}" var="item">
-                <c:set var="cartTotalQuantity" value="${cartTotalQuantity + item.quantity}" />
-                <c:set var="cartTotalPrice" value="${cartTotalPrice + (item.price * item.quantity)}" />
-            </c:forEach>
-
-            <a href="/cart" class="position-fixed bottom-0 end-0 m-4 bg-white rounded-pill shadow-lg d-flex align-items-center text-decoration-none" 
-               style="z-index: 1050; padding: 10px 25px; border: 2px solid var(--primary-color); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);"
-               onmouseover="this.style.transform = 'scale(1.08) translateY(-5px)'" 
-               onmouseout="this.style.transform = 'scale(1) translateY(0)'">
-
-                <div class="position-relative me-3">
-                    <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
-                        <i class="bi bi-cart-fill fs-4"></i>
-                    </div>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-2 border-white" style="font-size: 0.85rem;">
-                        ${cartTotalQuantity}
-                    </span>
-                </div>
-
-                <div class="text-start border-start ps-3">
-                    <div class="fw-bold text-muted small text-uppercase" style="letter-spacing: 1px;">Giỏ hàng</div>
-                    <div class="fw-black fs-5" style="color: var(--primary-color-dark);">
-                        <fmt:formatNumber value="${cartTotalPrice}" type="currency" currencySymbol="đ"/>
-                    </div>
-                </div>
-            </a>
-        </c:if>
-
         <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content shadow-lg">
@@ -244,12 +208,42 @@
             </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <c:if test="${not empty sessionScope.cart}">
+            <c:set var="cartTotalQuantity" value="0" />
+            <c:set var="cartTotalPrice" value="0" />
+            <c:forEach items="${sessionScope.cart}" var="item">
+                <c:set var="cartTotalQuantity" value="${cartTotalQuantity + item.quantity}" />
+                <c:set var="cartTotalPrice" value="${cartTotalPrice + (item.price * item.quantity)}" />
+            </c:forEach>
 
+            <a href="/cart" class="position-fixed bottom-0 end-0 m-4 bg-white rounded-pill shadow-lg d-flex align-items-center text-decoration-none" 
+               style="z-index: 1050; padding: 10px 25px; border: 2px solid var(--primary-color); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);"
+               onmouseover="this.style.transform = 'scale(1.08) translateY(-5px)'" 
+               onmouseout="this.style.transform = 'scale(1) translateY(0)'">
+
+                <div class="position-relative me-3">
+                    <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                        <i class="bi bi-cart-fill fs-4"></i>
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-2 border-white" style="font-size: 0.85rem;">
+                        ${cartTotalQuantity}
+                    </span>
+                </div>
+
+                <div class="text-start border-start ps-3">
+                    <div class="fw-bold text-muted small text-uppercase" style="letter-spacing: 1px;">Giỏ hàng</div>
+                    <div class="fw-black fs-5" style="color: var(--primary-color-dark);">
+                        <fmt:formatNumber value="${cartTotalPrice}" type="currency" currencySymbol="đ"/>
+                    </div>
+                </div>
+            </a>
+        </c:if>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.has('error')) {
+                if (urlParams.has('error') || urlParams.has('login') || '${success}' !== '') {
                     var myModal = new bootstrap.Modal(document.getElementById('loginModal'));
                     myModal.show();
                 }
