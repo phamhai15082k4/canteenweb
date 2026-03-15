@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-<%@ taglib prefix="fn" uri="jakarta.tags.functions" %> <!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
@@ -13,7 +14,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
         
         <style>
-            /* ĐÃ FIX: ÉP NAVBAR VÀ DROPDOWN NỔI LÊN TRÊN CÙNG */
+            
             .navbar { z-index: 9999 !important; }
             .dropdown-menu { z-index: 10000 !important; position: absolute; }
             .category-card, .product-card { position: relative; z-index: 1; }
@@ -117,22 +118,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="row align-items-center mt-5 pt-4">
-                <div class="col-md-6 pe-md-5 mb-4 mb-md-0">
-                    <h2 class="fw-bold mb-4" style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--secondary-color);">🍽️ Câu Chuyện Của Chúng Tôi</h2>
-                    <div class="about-text">
-                        <p>The Canteen được xây dựng với sứ mệnh mang đến những bữa ăn an toàn, chất lượng và đầy đủ dinh dưỡng cho cộng đồng học sinh, sinh viên và giảng viên.</p>
-                        <p>Với hệ thống bếp hiện đại, quy trình kiểm soát chất lượng khép kín, chúng tôi tự hào phục vụ hàng ngàn suất ăn mỗi ngày. Hệ thống đặt món trực tuyến được ra mắt nhằm tối ưu hóa trải nghiệm, giúp bạn tiết kiệm thời gian nghỉ ngơi quý giá.</p>
-                        <p class="fw-bold fs-5 mt-4 text-dark" style="border-left: 4px solid var(--primary-color); padding-left: 15px;">
-                            "An toàn – Chất lượng – Minh bạch – Chuyên nghiệp"
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-6 text-center">
-                    <img src="${pageContext.request.contextPath}/img/Cangtin.jpg" class="img-fluid rounded-4 shadow-lg" alt="Hình ảnh Căng tin" style="border: 10px solid white;">
-                </div>
-            </div>
         </div>
 
         <div class="py-5" id="categories" style="background-color: #f0f2f5;">
@@ -159,26 +144,21 @@
                             <a href="/menu?categoryId=${c.id}" class="text-decoration-none">
                                 <div class="category-card">
                                     <c:choose>
-                                        <c:when test="${fn:containsIgnoreCase(c.name, 'Cơm') || fn:containsIgnoreCase(c.name, 'Mặn') || fn:containsIgnoreCase(c.name, 'Món chính')}">
+                                        <c:when test="${c.name.contains('Cơm') || c.name.contains('Mặn') || c.name.contains('chính')}">
                                             <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=500&q=80" class="category-img" alt="${c.name}">
                                         </c:when>
-                                        
-                                        <c:when test="${fn:containsIgnoreCase(c.name, 'Vặt') || fn:containsIgnoreCase(c.name, 'Nhẹ')}">
+                                        <c:when test="${c.name.contains('Vặt') || c.name.contains('Nhẹ')}">
                                             <img src="https://images.unsplash.com/photo-1623653387945-2fd25214f8fc?w=500&q=80" class="category-img" alt="${c.name}">
                                         </c:when>
-                                        
-                                        <c:when test="${fn:containsIgnoreCase(c.name, 'Uống') || fn:containsIgnoreCase(c.name, 'Khát')}">
+                                        <c:when test="${c.name.contains('Uống') || c.name.contains('Khát')}">
                                             <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=500&q=80" class="category-img" alt="${c.name}">
                                         </c:when>
-                                        
-                                        <c:when test="${fn:containsIgnoreCase(c.name, 'Canh') || fn:containsIgnoreCase(c.name, 'Rau')}">
+                                        <c:when test="${c.name.contains('Canh') || c.name.contains('Rau')}">
                                             <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80" class="category-img" alt="${c.name}">
                                         </c:when>
-                                        
-                                        <c:when test="${fn:containsIgnoreCase(c.name, 'Combo')}">
+                                        <c:when test="${c.name.contains('Combo')}">
                                             <img src="https://images.unsplash.com/photo-1543362906-acfc16c67564?w=500&q=80" class="category-img" alt="${c.name}">
                                         </c:when>
-                                        
                                         <c:otherwise>
                                             <img src="https://images.unsplash.com/photo-1493770348161-369560ae357d?w=500&q=80" class="category-img" alt="Khác">
                                         </c:otherwise>
@@ -212,7 +192,7 @@
 
                             <a href="/product/${p.id}">
                                 <c:choose>
-                                    <c:when test="${not empty p.image && fn:startsWith(p.image, 'http')}">
+                                    <c:when test="${not empty p.image && p.image.startsWith('http')}">
                                         <img src="${p.image}" class="card-img-top" alt="${p.name}">
                                     </c:when>
                                     <c:when test="${not empty p.image}">
@@ -280,28 +260,15 @@
                 <div class="row g-4">
                     <div class="col-md-4 pe-md-5">
                         <h5 class="text-warning">THE CANTEEN</h5>
-                        <p style="line-height: 1.8;">Hệ thống quản lý và phục vụ suất ăn trường học hiện đại. Cam kết mang đến những bữa ăn ngon miệng, dinh dưỡng và an toàn tuyệt đối cho sức khỏe.</p>
+                        <p style="line-height: 1.8;">Hệ thống quản lý và phục vụ suất ăn trường học hiện đại.</p>
                     </div>
                     <div class="col-md-4">
                         <h5 class="text-warning">LIÊN HỆ</h5>
                         <ul class="list-unstyled" style="line-height: 2;">
                             <li><i class="bi bi-geo-alt-fill text-warning me-2"></i> Đại học Sư phạm Kỹ thuật Nam Định</li>
                             <li><i class="bi bi-telephone-fill text-warning me-2"></i> 0987 654 321</li>
-                            <li><i class="bi bi-envelope-fill text-warning me-2"></i> support@canteen.edu.vn</li>
                         </ul>
                     </div>
-                    <div class="col-md-4">
-                        <h5 class="text-warning">GIỜ PHỤC VỤ</h5>
-                        <ul class="list-unstyled" style="line-height: 2;">
-                            <li><strong class="text-white">Thứ 2 - Thứ 6:</strong> 06:00 - 18:00</li>
-                            <li><strong class="text-white">Thứ 7:</strong> 06:00 - 12:00</li>
-                            <li><strong class="text-danger">Chủ Nhật:</strong> Đóng cửa</li>
-                        </ul>
-                    </div>
-                </div>
-                <hr class="border-secondary mt-5 mb-4">
-                <div class="text-center">
-                    <p class="mb-0 small text-muted">&copy; 2026 The Canteen Management System. All rights reserved.</p>
                 </div>
             </div>
         </footer>
@@ -322,12 +289,6 @@
                                 </div>
                             </c:if>
 
-                            <c:if test="${not empty success}">
-                                <div class="alert alert-success d-flex align-items-center rounded-3 border-success border-opacity-25 mb-4">
-                                    <i class="bi bi-check-circle-fill me-2 fs-5"></i> ${success}
-                                </div>
-                            </c:if>
-
                             <div class="form-floating mb-4">
                                 <input type="text" name="username" class="form-control" id="floatingInput" placeholder="username" required>
                                 <label for="floatingInput"><i class="bi bi-person text-muted me-1"></i> Tên đăng nhập (Mã SV)</label>
@@ -340,15 +301,6 @@
                             <button type="submit" class="btn w-100 py-3 rounded-pill fw-bold text-white shadow-sm" style="background-color: var(--primary-color); font-size: 1.1rem; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                                 ĐĂNG NHẬP NGAY
                             </button>
-
-                            <div class="text-center mt-4 pt-3 border-top">
-                                <p class="mb-0 text-muted">Chưa có tài khoản hệ thống? 
-                                    <a href="/register" class="fw-bold text-danger text-decoration-none">
-                                        Đăng ký tại đây
-                                    </a>
-                                </p>
-                            </div>
-
                         </form>
                     </div>
                 </div>
@@ -364,10 +316,7 @@
             </c:forEach>
 
             <a href="/cart" class="position-fixed bottom-0 end-0 m-4 bg-white rounded-pill shadow-lg d-flex align-items-center text-decoration-none" 
-               style="z-index: 1050; padding: 10px 25px; border: 2px solid var(--primary-color); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);"
-               onmouseover="this.style.transform = 'scale(1.08) translateY(-5px)'" 
-               onmouseout="this.style.transform = 'scale(1) translateY(0)'">
-
+               style="z-index: 1050; padding: 10px 25px; border: 2px solid var(--primary-color);">
                 <div class="position-relative me-3">
                     <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
                         <i class="bi bi-cart-fill fs-4"></i>
@@ -376,7 +325,6 @@
                         ${cartTotalQuantity}
                     </span>
                 </div>
-
                 <div class="text-start border-start ps-3">
                     <div class="fw-bold text-muted small text-uppercase" style="letter-spacing: 1px;">Giỏ hàng</div>
                     <div class="fw-black fs-5" style="color: var(--primary-color-dark);">
