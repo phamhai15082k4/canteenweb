@@ -25,20 +25,17 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                
-                // ĐÃ THÊM "/menu", "/menu/**" VÀ "/img/**" VÀO ĐÂY ĐỂ MỞ KHÓA
-                .requestMatchers("/", "/home", "/menu", "/menu/**", "/login", "/register", "/product/**", "/css/**", "/js/**", "/img/**", "/images/**", "/WEB-INF/jsp/**").permitAll()
-                
+                .requestMatchers("/", "/home", "/menu", "/menu/**", "/register", "/product/**", "/css/**", "/js/**", "/img/**", "/images/**", "/WEB-INF/jsp/**").permitAll()
                 .requestMatchers("/admin/orders/**", "/admin/profile/**").hasAnyRole("ADMIN", "STAFF")
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login")
+                
+                .loginPage("/?login=true") 
                 .loginProcessingUrl("/perform_login")
-                .defaultSuccessUrl("/", true)
                 .successHandler(loginSuccessHandler)
-                .failureUrl("/?error=true") // Nếu sai pass thì báo lỗi
+                .failureUrl("/?error=true") 
                 .permitAll()
             )   
             .logout(logout -> logout
@@ -46,7 +43,7 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
                 .permitAll()
             )
-            .csrf(csrf -> csrf.disable()); // Tắt CSRF để test cho dễ
+            .csrf(csrf -> csrf.disable()); 
 
         return http.build();
     }
