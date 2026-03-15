@@ -4,12 +4,8 @@ WORKDIR /app
 COPY . .
 RUN cd canteensystem && mvn clean package -DskipTests
 
-# Stage 2: Chay server Tomcat
-FROM tomcat:10.1-jdk21
-
-# Xoa cac app mac dinh cua Tomcat de tranh xung dot
-RUN rm -rf /usr/local/tomcat/webapps/*
-
-
-COPY --from=build /app/canteensystem/target/*.war /usr/local/tomcat/webapps/ROOT.war
-
+# Stage 2: Chay server Spring Boot 
+FROM eclipse-temurin:21-jdk
+WORKDIR /app
+COPY --from=build /app/canteensystem/target/*.war app.war
+ENTRYPOINT ["java", "-jar", "app.war"]
