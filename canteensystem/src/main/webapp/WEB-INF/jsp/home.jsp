@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
-<!DOCTYPE html>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %> <!DOCTYPE html>
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
@@ -12,6 +11,13 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+        
+        <style>
+            /* ĐÃ FIX: ÉP NAVBAR VÀ DROPDOWN NỔI LÊN TRÊN CÙNG */
+            .navbar { z-index: 9999 !important; }
+            .dropdown-menu { z-index: 10000 !important; position: absolute; }
+            .category-card, .product-card { position: relative; z-index: 1; }
+        </style>
     </head>
     <body>
 
@@ -153,32 +159,26 @@
                             <a href="/menu?categoryId=${c.id}" class="text-decoration-none">
                                 <div class="category-card">
                                     <c:choose>
-                                        <%-- CƠM & ĐỒ MẶN / MÓN CHÍNH --%>
                                         <c:when test="${fn:containsIgnoreCase(c.name, 'Cơm') || fn:containsIgnoreCase(c.name, 'Mặn') || fn:containsIgnoreCase(c.name, 'Món chính')}">
                                             <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=500&q=80" class="category-img" alt="${c.name}">
                                         </c:when>
                                         
-                                        <%-- ĐỒ ĂN VẶT / ĐỒ ĂN NHẸ --%>
                                         <c:when test="${fn:containsIgnoreCase(c.name, 'Vặt') || fn:containsIgnoreCase(c.name, 'Nhẹ')}">
                                             <img src="https://images.unsplash.com/photo-1623653387945-2fd25214f8fc?w=500&q=80" class="category-img" alt="${c.name}">
                                         </c:when>
                                         
-                                        <%-- ĐỒ UỐNG & GIẢI KHÁT --%>
                                         <c:when test="${fn:containsIgnoreCase(c.name, 'Uống') || fn:containsIgnoreCase(c.name, 'Khát')}">
                                             <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=500&q=80" class="category-img" alt="${c.name}">
                                         </c:when>
                                         
-                                        <%-- CANH & RAU --%>
                                         <c:when test="${fn:containsIgnoreCase(c.name, 'Canh') || fn:containsIgnoreCase(c.name, 'Rau')}">
                                             <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80" class="category-img" alt="${c.name}">
                                         </c:when>
                                         
-                                        <%-- COMBO BỮA TRƯA/TỐI --%>
                                         <c:when test="${fn:containsIgnoreCase(c.name, 'Combo')}">
                                             <img src="https://images.unsplash.com/photo-1543362906-acfc16c67564?w=500&q=80" class="category-img" alt="${c.name}">
                                         </c:when>
                                         
-                                        <%-- MẶC ĐỊNH CHO CÁC MỤC KHÁC --%>
                                         <c:otherwise>
                                             <img src="https://images.unsplash.com/photo-1493770348161-369560ae357d?w=500&q=80" class="category-img" alt="Khác">
                                         </c:otherwise>
@@ -212,7 +212,7 @@
 
                             <a href="/product/${p.id}">
                                 <c:choose>
-                                    <c:when test="${not empty p.image && p.image.startsWith('http')}">
+                                    <c:when test="${not empty p.image && fn:startsWith(p.image, 'http')}">
                                         <img src="${p.image}" class="card-img-top" alt="${p.name}">
                                     </c:when>
                                     <c:when test="${not empty p.image}">
