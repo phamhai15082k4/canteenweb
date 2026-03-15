@@ -54,18 +54,22 @@ public class HomeController {
         return "menu"; 
     }
     
-  
+    // 3. XỬ LÝ LỖI LOOP BẰNG CÁCH CHUYỂN HƯỚNG VỀ MODAL ĐĂNG NHẬP TẠI ĐÂY
+    @GetMapping("/login")
+    public String loginPage() {
+        return "redirect:/?login=true"; 
+    }
     
     @GetMapping("/403") 
     public String accessDenied() { return "403"; }
      
-    // 3. HIỂN THỊ TRANG ĐĂNG KÝ
+    // 4. HIỂN THỊ TRANG ĐĂNG KÝ
     @GetMapping("/register")
     public String showRegisterPage() {
         return "register"; 
     }
 
-    // 4. XỬ LÝ DỮ LIỆU KHI BẤM "ĐĂNG KÝ NGAY"
+    // 5. XỬ LÝ DỮ LIỆU KHI BẤM "ĐĂNG KÝ NGAY"
     @PostMapping("/register")
     public String processRegister(@RequestParam("username") String username,
                                   @RequestParam("fullName") String fullName,
